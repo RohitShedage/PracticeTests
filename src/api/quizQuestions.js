@@ -1,4 +1,4 @@
-var quizQuestions = [
+const quizQuestions = [
   {
     question: "18 X 19 = ",
     answers: [
@@ -46,4 +46,6 @@ var quizQuestions = [
   }
 ];
 
-export default quizQuestions;
+const allotedTimeInSeconds = 90;
+
+export { quizQuestions, allotedTimeInSeconds };

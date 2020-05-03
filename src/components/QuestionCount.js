@@ -1,9 +1,13 @@
 import React from "react";
+import Timer from "./Timer";
 
 function QuestionCount(props) {
   return (
     <div className="questionCount">
-      Question <span>{props.counter}</span> of <span>{props.total}</span>
+      <div>{`Question ${props.counter} of ${props.total}`}</div>
+      <div>
+        Time Spent <Timer timeInSeconds={props.timeSpent} />
+      </div>
     </div>
   );
 }

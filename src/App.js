@@ -1,8 +1,9 @@
 import React, { Component } from "react";
-import quizQuestions from "./api/quizQuestions";
-import { shuffleQuiz } from "./services/shuffleService";
+import { quizQuestions, allotedTimeInSeconds } from "./api/quizQuestions";
+import { shuffleQuiz, initializeUserData } from "./services/shuffleService";
 import Quiz from "./components/Quiz";
 import Result from "./components/Result";
+import Timer from "./components/Timer";
 import "./App.css";
 
 class App extends Component {
@@ -14,22 +15,48 @@ class App extends Component {
       result: {
         displayResult: false
       },
-      questions: []
+      questions: [],
+      userData: {},
+      remainingTime: 100
     };
   }
 
   componentDidMount() {
     const questions = shuffleQuiz(quizQuestions);
+    const userData = initializeUserData(questions);
     this.setState({
-      questions
+      questions,
+      userData,
+      remainingTime: allotedTimeInSeconds
     });
+    this.intervalMethod = setInterval(this.updateTime, 1000);
   }
+
+  componentWillUnmount = () => clearInterval(this.intervalMethod);
+
+  updateTime = () => {
+    this.setState({
+      remainingTime: this.state.remainingTime - 1,
+      userData: {
+        ...this.state.userData,
+        [this.state.counter]: {
+          ...this.state.userData[this.state.counter],
+          timeSpent: this.state.userData[this.state.counter].timeSpent + 1
+        }
+      }
+    });
+
+    if (this.state.remainingTime === 0) {
+      clearInterval(this.intervalMethod);
+      this.submitTest();
+    }
+  };
 
   submitTest = () => {
     this.setState({
       result: {
-        correct: this.state.questions.filter(
-          question => question.selectedAnswer === "correct"
+        correct: Object.entries(this.state.userData).filter(
+          entry => entry[1].selectedAnswer === "correct"
         ).length,
         total: this.state.questions.length,
         displayResult: true
@@ -40,11 +67,13 @@ class App extends Component {
   handleAnswerSelected = event => {
     const answer = event.currentTarget.value;
     this.setState({
-      questions: this.state.questions.map((question, index) => {
-        return index === this.state.counter
-          ? { ...question, selectedAnswer: answer }
-          : question;
-      })
+      userData: {
+        ...this.state.userData,
+        [this.state.counter]: {
+          ...this.state.userData[this.state.counter],
+          selectedAnswer: answer
+        }
+      }
     });
   };
 
@@ -57,10 +86,13 @@ class App extends Component {
       this.state.questions.length && (
         <div className="App">
           <div className="App-header">
-            <h2>Quiz</h2>
+            <h2>
+              Quiz - Time Remaining
+              <Timer format="HHMMSS" timeInSeconds={this.state.remainingTime} />
+            </h2>
           </div>
           <Quiz
-            answer={this.state.questions[this.state.counter].selectedAnswer}
+            answer={this.state.userData[this.state.counter].selectedAnswer}
             answerOptions={this.state.questions[this.state.counter].answers}
             questionId={this.state.counter + 1}
             question={this.state.questions[this.state.counter].question}
@@ -70,6 +102,7 @@ class App extends Component {
             onPreviousQuestion={this.setPrevQuestion}
             onSubmitTest={this.submitTest}
             displayQuiz={!this.state.result.displayResult}
+            timeSpent={this.state.userData[this.state.counter].timeSpent}
           />
           <Result quizResult={this.state.result} />
         </div>

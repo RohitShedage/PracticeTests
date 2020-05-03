@@ -34,4 +34,15 @@ const shuffleQuiz = questions => {
   });
 };
 
-export { shuffleQuiz };
+const initializeUserData = array => {
+  const userDataMap = {};
+  array.forEach((element, index) => {
+    userDataMap[index] = {
+      selectedAnswer: "",
+      timeSpent: 0
+    };
+  });
+  return userDataMap;
+};
+
+export { shuffleQuiz, initializeUserData };

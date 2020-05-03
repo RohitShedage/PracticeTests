@@ -1,6 +1,6 @@
-import React from 'react';
-import PropTypes from 'prop-types';
-import { CSSTransitionGroup } from 'react-transition-group';
+import React from "react";
+import PropTypes from "prop-types";
+import { CSSTransitionGroup } from "react-transition-group";
 
 function Result(props) {
   return (
@@ -14,14 +14,18 @@ function Result(props) {
       transitionAppearTimeout={500}
     >
       <div>
-        You prefer <strong>{props.quizResult}</strong>!
+        You scored{" "}
+        <strong>
+          {(props.quizResult.correct / props.quizResult.total) * 100}
+          {"%"}
+        </strong>
       </div>
     </CSSTransitionGroup>
   );
 }
 
 Result.propTypes = {
-  quizResult: PropTypes.string.isRequired
+  quizResult: PropTypes.object.isRequired
 };
 
 export default Result;

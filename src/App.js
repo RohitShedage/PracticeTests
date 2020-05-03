@@ -1,9 +1,8 @@
-import React, { Component } from 'react';
-import quizQuestions from './api/quizQuestions';
-import Quiz from './components/Quiz';
-import Result from './components/Result';
-import logo from './svg/logo.svg';
-import './App.css';
+import React, { Component } from "react";
+import quizQuestions from "./api/quizQuestions";
+import Quiz from "./components/Quiz";
+import Result from "./components/Result";
+import "./App.css";
 
 class App extends Component {
   constructor(props) {
@@ -12,23 +11,37 @@ class App extends Component {
     this.state = {
       counter: 0,
       questionId: 1,
-      question: '',
+      question: "",
       answerOptions: [],
-      answer: '',
-      answersCount: {},
-      result: ''
+      answer: "",
+      answersCount: {
+        correct: 0,
+        wrong: 0
+      },
+      result: "",
+      questions: []
     };
 
     this.handleAnswerSelected = this.handleAnswerSelected.bind(this);
+    this.setNextQuestion = this.setNextQuestion.bind(this);
+    this.submitTest = this.submitTest.bind(this);
   }
 
   componentDidMount() {
-    const shuffledAnswerOptions = quizQuestions.map(question =>
-      this.shuffleArray(question.answers)
-    );
+    const questions = this.shuffleArray(quizQuestions);
     this.setState({
-      question: quizQuestions[0].question,
-      answerOptions: shuffledAnswerOptions[0]
+      questions,
+      question: questions[0].question,
+      answerOptions: this.shuffleArray(this.mapAnswers(questions[0].answers))
+    });
+  }
+
+  mapAnswers(array) {
+    return array.map((itr, index) => {
+      return {
+        ...itr,
+        type: !!itr.type ? itr.type : "wrong" + index
+      };
     });
   }
 
@@ -37,36 +50,30 @@ class App extends Component {
       temporaryValue,
       randomIndex;
 
-    // While there remain elements to shuffle...
     while (0 !== currentIndex) {
-      // Pick a remaining element...
       randomIndex = Math.floor(Math.random() * currentIndex);
       currentIndex -= 1;
-
-      // And swap it with the current element.
       temporaryValue = array[currentIndex];
       array[currentIndex] = array[randomIndex];
       array[randomIndex] = temporaryValue;
     }
-
     return array;
   }
 
   handleAnswerSelected(event) {
     this.setUserAnswer(event.currentTarget.value);
+  }
 
-    if (this.state.questionId < quizQuestions.length) {
-      setTimeout(() => this.setNextQuestion(), 300);
-    } else {
-      setTimeout(() => this.setResults(this.getResults()), 300);
-    }
+  submitTest() {
+    this.setResults(this.getResults());
   }
 
   setUserAnswer(answer) {
-    this.setState((state, props) => ({
+    const key = answer.includes("wrong") ? "wrong" : "correct";
+    this.setState(state => ({
       answersCount: {
         ...state.answersCount,
-        [answer]: (state.answersCount[answer] || 0) + 1
+        [key]: state.answersCount[key] + 1
       },
       answer: answer
     }));
@@ -79,27 +86,20 @@ class App extends Component {
     this.setState({
       counter: counter,
       questionId: questionId,
-      question: quizQuestions[counter].question,
-      answerOptions: quizQuestions[counter].answers,
-      answer: ''
+      question: this.state.questions[counter].question,
+      answerOptions: this.shuffleArray(
+        this.mapAnswers(this.state.questions[counter].answers)
+      ),
+      answer: ""
     });
   }
 
   getResults() {
-    const answersCount = this.state.answersCount;
-    const answersCountKeys = Object.keys(answersCount);
-    const answersCountValues = answersCountKeys.map(key => answersCount[key]);
-    const maxAnswerCount = Math.max.apply(null, answersCountValues);
-
-    return answersCountKeys.filter(key => answersCount[key] === maxAnswerCount);
+    return { ...this.state.answersCount, total: this.state.questions.length };
   }
 
   setResults(result) {
-    if (result.length === 1) {
-      this.setState({ result: result[0] });
-    } else {
-      this.setState({ result: 'Undetermined' });
-    }
+    this.setState({ result });
   }
 
   renderQuiz() {
@@ -109,8 +109,10 @@ class App extends Component {
         answerOptions={this.state.answerOptions}
         questionId={this.state.questionId}
         question={this.state.question}
-        questionTotal={quizQuestions.length}
+        questionTotal={this.state.questions.length}
         onAnswerSelected={this.handleAnswerSelected}
+        onNextQuestion={this.setNextQuestion}
+        onSubmitTest={this.submitTest}
       />
     );
   }
@@ -123,8 +125,7 @@ class App extends Component {
     return (
       <div className="App">
         <div className="App-header">
-          <img src={logo} className="App-logo" alt="logo" />
-          <h2>React Quiz</h2>
+          <h2>Quiz</h2>
         </div>
         {this.state.result ? this.renderResult() : this.renderQuiz()}
       </div>

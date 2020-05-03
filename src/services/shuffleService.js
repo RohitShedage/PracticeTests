@@ -22,4 +22,15 @@ const shuffleArray = array => {
   return array;
 };
 
-export { mapAnswers, shuffleArray };
+const shuffleQuiz = questions => {
+  questions = shuffleArray(questions);
+
+  return questions.map(question => {
+    return {
+      ...question,
+      answers: shuffleArray(mapAnswers(question.answers))
+    };
+  });
+};
+
+export { shuffleQuiz };

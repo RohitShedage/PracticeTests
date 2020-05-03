@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import quizQuestions from "./api/quizQuestions";
-import { mapAnswers, shuffleArray } from "./services/shuffleService";
+import { shuffleQuiz } from "./services/shuffleService";
 import Quiz from "./components/Quiz";
 import Result from "./components/Result";
 import "./App.css";
@@ -25,11 +25,11 @@ class App extends Component {
   }
 
   componentDidMount() {
-    const questions = shuffleArray(quizQuestions);
+    const questions = shuffleQuiz(quizQuestions);
     this.setState({
       questions,
       question: questions[0].question,
-      answerOptions: shuffleArray(mapAnswers(questions[0].answers))
+      answerOptions: questions[0].answers
     });
   }
 
@@ -59,9 +59,7 @@ class App extends Component {
       counter: counter,
       questionId: questionId,
       question: this.state.questions[counter].question,
-      answerOptions: shuffleArray(
-        mapAnswers(this.state.questions[counter].answers)
-      ),
+      answerOptions: this.state.questions[counter].answers,
       answer: ""
     });
   };

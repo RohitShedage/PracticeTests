@@ -28,6 +28,21 @@ var quizQuestions = [
         content: "1123"
       }
     ]
+  },
+  {
+    question: "46 + 77",
+    answers: [
+      {
+        type: "correct",
+        content: "123"
+      },
+      {
+        content: "113"
+      },
+      {
+        content: "13"
+      }
+    ]
   }
 ];
 

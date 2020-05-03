@@ -14,7 +14,7 @@ class App extends Component {
       answer: "",
       result: {
         correct: 0,
-        wrong: 0,
+        total: 0,
         displayResult: false
       },
       questions: []
@@ -24,7 +24,8 @@ class App extends Component {
   componentDidMount() {
     const questions = shuffleQuiz(quizQuestions);
     this.setState({
-      questions
+      questions,
+      result: { ...this.state.result, total: questions.length }
     });
   }
 

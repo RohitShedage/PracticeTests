@@ -11,15 +11,12 @@ class App extends Component {
 
     this.state = {
       counter: 0,
-      questionId: 1,
-      question: "",
-      answerOptions: [],
       answer: "",
-      answersCount: {
+      result: {
         correct: 0,
-        wrong: 0
+        wrong: 0,
+        displayResult: false
       },
-      result: "",
       questions: []
     };
   }
@@ -27,15 +24,13 @@ class App extends Component {
   componentDidMount() {
     const questions = shuffleQuiz(quizQuestions);
     this.setState({
-      questions,
-      question: questions[0].question,
-      answerOptions: questions[0].answers
+      questions
     });
   }
 
   submitTest = () => {
     this.setState({
-      result: { ...this.state.answersCount, total: this.state.questions.length }
+      result: { ...this.state.result, displayResult: true }
     });
   };
 
@@ -43,9 +38,9 @@ class App extends Component {
     const answer = event.currentTarget.value;
     const key = answer.includes("wrong") ? "wrong" : "correct";
     this.setState(state => ({
-      answersCount: {
-        ...state.answersCount,
-        [key]: state.answersCount[key] + 1
+      result: {
+        ...state.result,
+        [key]: state.result[key] + 1
       },
       answer: answer
     }));
@@ -53,36 +48,35 @@ class App extends Component {
 
   setNextQuestion = () => {
     const counter = this.state.counter + 1;
-    const questionId = this.state.questionId + 1;
 
     this.setState({
       counter: counter,
-      questionId: questionId,
-      question: this.state.questions[counter].question,
-      answerOptions: this.state.questions[counter].answers,
       answer: ""
     });
   };
 
   render() {
+    console.log(this.state.questions);
     return (
-      <div className="App">
-        <div className="App-header">
-          <h2>Quiz</h2>
+      this.state.questions.length && (
+        <div className="App">
+          <div className="App-header">
+            <h2>Quiz</h2>
+          </div>
+          <Quiz
+            answer={this.state.answer}
+            answerOptions={this.state.questions[this.state.counter].answers}
+            questionId={this.state.counter + 1}
+            question={this.state.questions[this.state.counter].question}
+            questionTotal={this.state.questions.length}
+            onAnswerSelected={this.handleAnswerSelected}
+            onNextQuestion={this.setNextQuestion}
+            onSubmitTest={this.submitTest}
+            displayQuiz={!this.state.result.displayResult}
+          />
+          <Result quizResult={this.state.result} />
         </div>
-        <Quiz
-          answer={this.state.answer}
-          answerOptions={this.state.answerOptions}
-          questionId={this.state.questionId}
-          question={this.state.question}
-          questionTotal={this.state.questions.length}
-          onAnswerSelected={this.handleAnswerSelected}
-          onNextQuestion={this.setNextQuestion}
-          onSubmitTest={this.submitTest}
-          displayQuiz={!this.state.result}
-        />
-        <Result quizResult={this.state.result} />
-      </div>
+      )
     );
   }
 }

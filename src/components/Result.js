@@ -4,7 +4,7 @@ import { CSSTransitionGroup } from "react-transition-group";
 
 function Result(props) {
   return (
-    props.quizResult && (
+    props.quizResult.displayResult && (
       <CSSTransitionGroup
         className="container result"
         component="div"
@@ -17,7 +17,9 @@ function Result(props) {
         <div>
           You scored{" "}
           <strong>
-            {(props.quizResult.correct / props.quizResult.total) * 100}
+            {(props.quizResult.correct /
+              (props.quizResult.correct + props.quizResult.wrong || 1)) *
+              100}
             {"%"}
           </strong>
         </div>

@@ -1,5 +1,4 @@
 import React from "react";
-import PropTypes from "prop-types";
 import { CSSTransitionGroup } from "react-transition-group";
 import Question from "../components/Question";
 import QuestionCount from "../components/QuestionCount";
@@ -55,14 +54,5 @@ function Quiz(props) {
     )
   );
 }
-
-Quiz.propTypes = {
-  answer: PropTypes.string.isRequired,
-  answerOptions: PropTypes.array.isRequired,
-  question: PropTypes.string.isRequired,
-  questionId: PropTypes.number.isRequired,
-  questionTotal: PropTypes.number.isRequired,
-  onAnswerSelected: PropTypes.func.isRequired
-};
 
 export default Quiz;

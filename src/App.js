@@ -39,13 +39,13 @@ class App extends Component {
 
   handleAnswerSelected = event => {
     const answer = event.currentTarget.value;
-    this.setState(state => ({
+    this.setState({
       questions: this.state.questions.map((question, index) => {
         return index === this.state.counter
           ? { ...question, selectedAnswer: answer }
           : question;
       })
-    }));
+    });
   };
 
   setNextQuestion = () => this.setState({ counter: this.state.counter + 1 });
@@ -53,7 +53,6 @@ class App extends Component {
   setPrevQuestion = () => this.setState({ counter: this.state.counter - 1 });
 
   render() {
-    console.log(this.state.questions);
     return (
       this.state.questions.length && (
         <div className="App">

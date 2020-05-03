@@ -41,7 +41,9 @@ function Quiz(props) {
           </ul>
           <div className="controls">
             {props.questionId !== 1 && (
-              <button onClick={props.onNextQuestion}>Previous Question</button>
+              <button onClick={props.onPreviousQuestion}>
+                Previous Question
+              </button>
             )}
             {props.questionId === props.questionTotal || (
               <button onClick={props.onNextQuestion}>Next Question</button>

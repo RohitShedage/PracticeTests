@@ -11,10 +11,7 @@ class App extends Component {
 
     this.state = {
       counter: 0,
-      answer: "",
       result: {
-        correct: 0,
-        total: 0,
         displayResult: false
       },
       questions: []
@@ -24,37 +21,36 @@ class App extends Component {
   componentDidMount() {
     const questions = shuffleQuiz(quizQuestions);
     this.setState({
-      questions,
-      result: { ...this.state.result, total: questions.length }
+      questions
     });
   }
 
   submitTest = () => {
     this.setState({
-      result: { ...this.state.result, displayResult: true }
+      result: {
+        correct: this.state.questions.filter(
+          question => question.selectedAnswer === "correct"
+        ).length,
+        total: this.state.questions.length,
+        displayResult: true
+      }
     });
   };
 
   handleAnswerSelected = event => {
     const answer = event.currentTarget.value;
-    const key = answer.includes("wrong") ? "wrong" : "correct";
     this.setState(state => ({
-      result: {
-        ...state.result,
-        [key]: state.result[key] + 1
-      },
-      answer: answer
+      questions: this.state.questions.map((question, index) => {
+        return index === this.state.counter
+          ? { ...question, selectedAnswer: answer }
+          : question;
+      })
     }));
   };
 
-  setNextQuestion = () => {
-    const counter = this.state.counter + 1;
+  setNextQuestion = () => this.setState({ counter: this.state.counter + 1 });
 
-    this.setState({
-      counter: counter,
-      answer: ""
-    });
-  };
+  setPrevQuestion = () => this.setState({ counter: this.state.counter - 1 });
 
   render() {
     console.log(this.state.questions);
@@ -65,13 +61,14 @@ class App extends Component {
             <h2>Quiz</h2>
           </div>
           <Quiz
-            answer={this.state.answer}
+            answer={this.state.questions[this.state.counter].selectedAnswer}
             answerOptions={this.state.questions[this.state.counter].answers}
             questionId={this.state.counter + 1}
             question={this.state.questions[this.state.counter].question}
             questionTotal={this.state.questions.length}
             onAnswerSelected={this.handleAnswerSelected}
             onNextQuestion={this.setNextQuestion}
+            onPreviousQuestion={this.setPrevQuestion}
             onSubmitTest={this.submitTest}
             displayQuiz={!this.state.result.displayResult}
           />

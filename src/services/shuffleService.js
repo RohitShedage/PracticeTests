@@ -28,7 +28,8 @@ const shuffleQuiz = questions => {
   return questions.map(question => {
     return {
       ...question,
-      answers: shuffleArray(mapAnswers(question.answers))
+      answers: shuffleArray(mapAnswers(question.answers)),
+      selectedAnswer: ""
     };
   });
 };

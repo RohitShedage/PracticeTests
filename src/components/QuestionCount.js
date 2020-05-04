@@ -6,7 +6,7 @@ function QuestionCount(props) {
     <div className="questionCount">
       <div>{`Question ${props.counter} of ${props.total}`}</div>
       <div>
-        Time Spent <Timer timeInSeconds={props.timeSpent} />
+        Time Spent in (MM:SS) - <Timer timeInSeconds={props.timeSpent} />
       </div>
     </div>
   );

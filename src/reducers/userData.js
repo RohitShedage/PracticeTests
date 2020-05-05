@@ -11,7 +11,14 @@ const userData = (state = initializeUserData(quizQuestions), action) => {
           selectedAnswer: action.payload.answer
         }
       };
-
+    case "UPDATE_TIME":
+      return {
+        ...state,
+        [action.payload.counter]: {
+          ...state[action.payload.counter],
+          timeSpent: state[action.payload.counter].timeSpent + 1
+        }
+      };
     default:
       return state;
   }

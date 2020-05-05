@@ -8,6 +8,12 @@ const defaultResult = {
 
 const result = (state = defaultResult, action) => {
   switch (action.type) {
+    case "SUBMIT_TEST":
+      return {
+        ...state,
+        ...action.payload,
+        displayResult: true
+      };
     default:
       return state;
   }

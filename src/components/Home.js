@@ -38,8 +38,6 @@ class Home extends Component {
             onAnswerSelected={event =>
               this.props.handleAnswerSelected(event, this.props.counter)
             }
-            onNextQuestion={this.props.setNextQuestion}
-            onPreviousQuestion={this.props.setPrevQuestion}
             onSubmitTest={() => this.props.submitTest(this.props.userData)}
             displayQuiz={!this.props.result.displayResult}
             timeSpent={this.props.userData[this.props.counter].timeSpent}

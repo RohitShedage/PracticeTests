@@ -3,6 +3,7 @@ import { CSSTransitionGroup } from "react-transition-group";
 import Question from "../components/Question";
 import QuestionCount from "../components/QuestionCount";
 import AnswerOption from "../components/AnswerOption";
+import Controls from "./Controls";
 
 function Quiz(props) {
   function renderAnswerOptions(key) {
@@ -39,17 +40,7 @@ function Quiz(props) {
           <ul className="answerOptions">
             {props.answerOptions.map(renderAnswerOptions)}
           </ul>
-          <div className="controls">
-            {props.questionId !== 1 && (
-              <button onClick={props.onPreviousQuestion}>
-                Previous Question
-              </button>
-            )}
-            {props.questionId === props.questionTotal || (
-              <button onClick={props.onNextQuestion}>Next Question</button>
-            )}
-            <button onClick={props.onSubmitTest}>Submit Test</button>
-          </div>
+          <Controls />
         </div>
       </CSSTransitionGroup>
     )

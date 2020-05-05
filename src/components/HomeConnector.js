@@ -7,8 +7,6 @@ const mapStateToProps = state => {
 
 const mapDispatchToProps = dispatch => {
   return {
-    setNextQuestion: () => dispatch({ type: "NEXT_QUESTION" }),
-    setPrevQuestion: () => dispatch({ type: "PREV_QUESTION" }),
     updateTime: counter =>
       dispatch({ type: "UPDATE_TIME", payload: { counter } }),
     submitTest: userData =>

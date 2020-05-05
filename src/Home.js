@@ -58,7 +58,9 @@ class Home extends Component {
             questionId={this.props.counter + 1}
             question={this.props.questions[this.props.counter].question}
             questionTotal={this.props.questions.length}
-            onAnswerSelected={this.props.handleAnswerSelected}
+            onAnswerSelected={event =>
+              this.props.handleAnswerSelected(event, this.props.counter)
+            }
             onNextQuestion={this.props.setNextQuestion}
             onPreviousQuestion={this.props.setPrevQuestion}
             onSubmitTest={this.props.submitTest}
@@ -75,17 +77,17 @@ const mapStateToProps = state => {
   return { ...state };
 };
 
-const mapDispatchToProps = (dispatch, ownprops) => {
+const mapDispatchToProps = dispatch => {
   return {
     setNextQuestion: () => dispatch({ type: "NEXT_QUESTION" }),
     setPrevQuestion: () => dispatch({ type: "PREV_QUESTION" }),
     updateTime: () => dispatch({ type: "UPDATE_TIME" }),
-    handleAnswerSelected: event =>
+    handleAnswerSelected: (event, counter) =>
       dispatch({
         type: "ANSWER_SUBMITTED",
         payload: {
           answer: event.currentTarget.value,
-          counter: ownprops.counter
+          counter
         }
       })
   };

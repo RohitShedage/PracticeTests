@@ -40,7 +40,7 @@ function Quiz(props) {
           <ul className="answerOptions">
             {props.answerOptions.map(renderAnswerOptions)}
           </ul>
-          <Controls />
+          <Controls onSubmitTest={props.onSubmitTest} />
         </div>
       </CSSTransitionGroup>
     )

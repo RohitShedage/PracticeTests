@@ -12,7 +12,7 @@ class Home extends Component {
   updateTimeMethod = () => {
     this.props.updateTime(this.props.counter);
 
-    if (this.props.remainingTime === 0) {
+    if (this.props.remainingTime === 0 || this.props.result.displayResult) {
       clearInterval(this.intervalMethod);
       this.props.submitTest(this.props.userData);
     }
